@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Monsterous Combatiousness — A dark, brutal combat game. Fight the beast. Survive or perish.">
+  <title>Monsterous Combatiousness</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/landing.css">
+  <link rel="stylesheet" href="css/login.css">
+  <link rel="stylesheet" href="css/profile.css">
+  <link rel="stylesheet" href="css/battle.css">
+
+  <!-- Favicon (skull emoji as data URI) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💀</text></svg>">
+</head>
+<body>
+
+  <!-- ===== PAGE 1: LANDING ===== -->
+  <div id="landing-page" class="page active">
+    <!-- Floating particles -->
+    <div class="landing-particles" id="landing-particles"></div>
+
+    <!-- Bottom fog -->
+    <div class="landing-fog"></div>
+
+    <!-- Main content -->
+    <div class="landing-content">
+      <div class="landing-monster" id="landing-monster">
+        <img src="assets/monster.png" alt="The Beast" draggable="false">
+      </div>
+
+      <h1 class="landing-title">Monsterous<br>Combatiousness</h1>
+      <p class="landing-subtitle">Do you dare face the beast?</p>
+
+      <button class="btn btn-primary landing-cta" id="btn-enter-arena">
+        Enter the Arena →
+      </button>
+    </div>
+
+    <span class="landing-version">v1.0</span>
+  </div>
+
+  <!-- ===== PAGE 2: LOGIN ===== -->
+  <div id="login-page" class="page">
+    <div class="login-bg-effect"></div>
+
+    <button class="back-btn" id="btn-back-to-landing">← Back</button>
+
+    <div class="login-card glass-card">
+      <div class="login-header">
+        <span class="login-icon">⚔️</span>
+        <h2 class="login-title">Welcome Back</h2>
+        <p class="login-subtitle">Enter your credentials, warrior</p>
+      </div>
+
+      <form class="login-form" id="login-form" autocomplete="off">
+        <div class="login-error" id="login-error"></div>
+
+        <div class="input-group">
+          <label class="input-label" for="login-email">Email</label>
+          <input type="email" class="input-field" id="login-email" placeholder="warrior@arena.com" required>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label" for="login-password">Password</label>
+          <input type="password" class="input-field" id="login-password" placeholder="••••••••" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary login-submit">Enter</button>
+      </form>
+
+      <div class="login-footer">
+        <p>New warrior? <a id="btn-register-toggle">Create an account</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PAGE 3: PROFILE SETUP ===== -->
+  <div id="profile-page" class="page">
+    <button class="back-btn" id="btn-back-to-login">← Logout / Switch Account</button>
+
+    <div class="profile-container">
+      <div class="profile-header">
+        <h2 class="profile-title">⚔️ Prepare for Battle</h2>
+        <p class="profile-subtitle">Set up your fighter profile</p>
+      </div>
+
+      <form class="profile-form" id="profile-form" autocomplete="off">
+        <div class="profile-error" id="profile-error"></div>
+
+        <div class="profile-inputs">
+          <div class="input-group">
+            <label class="input-label" for="profile-name">Your Name</label>
+            <input type="text" class="input-field" id="profile-name" placeholder="Enter your name" required maxlength="20">
+          </div>
+
+          <div class="input-group">
+            <label class="input-label" for="profile-age">Your Age</label>
+            <input type="number" class="input-field" id="profile-age" placeholder="Age" required min="1" max="150">
+          </div>
+        </div>
+
+        <!-- Character Selection -->
+        <div>
+          <p class="char-select-label">Choose Your Fighter</p>
+          <div class="char-select-grid">
+            <div class="char-card" id="char-male" data-char="male">
+              <img class="char-card-img" src="assets/male-char.png" alt="Male Fighter" draggable="false">
+              <span class="char-card-name">Shadow</span>
+            </div>
+            <div class="char-card" id="char-female" data-char="female">
+              <img class="char-card-img" src="assets/female-char.png" alt="Female Fighter" draggable="false">
+              <span class="char-card-name">Blade</span>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary profile-submit">Ready to Fight 🔥</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== PAGE 4: BATTLE ARENA ===== -->
+  <div id="battle-page" class="page">
+    <!-- Background -->
+    <div class="battle-bg">
+      <img src="assets/bg-arena.jpg" alt="Arena" draggable="false">
+    </div>
+
+    <!-- HUD: Health Bars -->
+    <div class="battle-hud">
+      <div class="health-bar-container">
+        <div class="health-bar-header">
+          <button class="battle-nav-btn" id="btn-battle-leave" title="Return to Fighter Selection">‹ Fighters</button>
+          <div class="health-bar-name" id="player-name-display">
+            <span class="turn-dot" id="player-turn-dot"></span>
+            <span id="player-name-text">PLAYER</span>
+          </div>
+        </div>
+        <div class="health-bar-outer">
+          <div class="health-bar-inner" id="player-health-bar" style="width: 100%"></div>
+        </div>
+        <div class="health-bar-hp" id="player-hp-text">100 / 100</div>
+      </div>
+
+      <div class="battle-vs">VS</div>
+
+      <div class="health-bar-container">
+        <div class="health-bar-name monster-name" id="monster-name-display">
+          <span class="turn-dot" id="monster-turn-dot"></span>
+          <span id="monster-name-text">MONSTER</span>
+        </div>
+        <div class="health-bar-outer">
+          <div class="health-bar-inner" id="monster-health-bar" style="width: 100%"></div>
+        </div>
+        <div class="health-bar-hp monster-hp" id="monster-hp-text">100 / 100</div>
+      </div>
+    </div>
+
+    <!-- Battle Arena (Characters) -->
+    <div class="battle-arena" id="battle-arena">
+      <!-- Combat Visual FX Layer (Slashes, Punch Shockwaves, Claw Scratches) -->
+      <div class="combat-fx-layer" id="combat-fx-layer"></div>
+
+      <!-- Player -->
+      <div class="battle-player" id="battle-player">
+        <div class="heal-emote-badge" id="heal-emote-badge">💚 REGENERATE 💚</div>
+        <div class="heal-pillar" id="heal-pillar"></div>
+        <img class="char-sprite" id="player-sprite" src="assets/male-char.png" alt="Player" draggable="false">
+        <div class="ground-shadow"></div>
+      </div>
+
+      <!-- Monster -->
+      <div class="battle-monster" id="battle-monster">
+        <img class="char-sprite" id="monster-sprite" src="assets/monster.png" alt="Monster" draggable="false">
+        <div class="ground-shadow"></div>
+      </div>
+    </div>
+
+    <!-- Speech Bubble -->
+    <div class="speech-bubble-container" id="speech-bubble-container">
+      <div class="speech-bubble" id="speech-bubble">
+        <div class="speaker">Monster</div>
+        <div class="speech-text" id="speech-text"></div>
+      </div>
+    </div>
+
+    <!-- Dramatic Text Overlay -->
+    <div class="dramatic-overlay" id="dramatic-overlay">
+      <div class="dramatic-text" id="dramatic-text"></div>
+    </div>
+
+    <!-- Action Controls: Left Hand (Heal) & Right Hand (Diagonal Attacks) -->
+    <div class="battle-actions" id="battle-actions">
+      <!-- Centered Status Banner -->
+      <div class="battle-status-bar status-player" id="battle-status-bar">YOUR TURN</div>
+
+      <!-- Left-most Side: Heal Control (Left Hand) -->
+      <div class="dock-left">
+        <button class="action-btn btn-heal" id="btn-heal" data-action="C" data-key="C" aria-label="Heal (Key C)">
+          <span class="action-icon">&#x1F49A;</span>
+          <span class="action-label">Heal</span>
+        </button>
+      </div>
+
+      <!-- Right-most Side: Diagonal Attack Controls (Right Hand) -->
+      <div class="dock-right">
+        <button class="action-btn btn-fist diag-top-left" id="btn-fist" data-action="A" data-key="A" aria-label="Punch (Key A)">
+          <span class="action-icon">&#x1F44A;</span>
+          <span class="action-label">Punch</span>
+        </button>
+        <button class="action-btn btn-kick diag-bottom-right" id="btn-kick" data-action="B" data-key="B" aria-label="Kick (Key B)">
+          <span class="action-icon">&#x1F9B6;</span>
+          <span class="action-label">Kick</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Cinematic Defeat Sequence Container -->
+    <div class="defeat-cinematic" id="defeat-cinematic">
+      <!-- First Person POV Scene -->
+      <div class="defeat-pov" id="defeat-pov">
+        <div class="defeat-pov-monster">
+          <img src="assets/monster.png" alt="Monster Looming" draggable="false">
+        </div>
+        <div class="defeat-blur-overlay"></div>
+      </div>
+
+      <!-- Blood Cascading Overlay (Flowing Down from Top of Screen) -->
+      <div class="blood-curtain-top" id="blood-curtain-top"></div>
+      <canvas id="blood-canvas" class="blood-canvas"></canvas>
+      <div class="blood-wash" id="blood-wash"></div>
+
+      <!-- Final END Screen Content -->
+      <div class="defeat-end-content" id="defeat-end-content">
+        <h1 class="defeat-end-title" id="defeat-end-title">END</h1>
+        <div class="defeat-quote" id="defeat-quote">
+          "Useless nobody! Get your dirty loser ass out of my sight"
+        </div>
+        <div class="defeat-actions">
+          <button class="btn btn-primary" id="btn-defeat-retry">Try Again ⚔️</button>
+          <button class="btn btn-glass" id="btn-defeat-change-char">Change Character</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cinematic Victory Overlay (Fade to Black with stylish END) -->
+    <div class="victory-cinematic" id="victory-cinematic">
+      <div class="victory-end-content" id="victory-end-content">
+        <h1 class="victory-end-title" id="victory-end-title">END</h1>
+        <div class="victory-monster-quote" id="victory-monster-quote">
+          "Monster: Motherfucker, you got a powerfull ass!"
+        </div>
+        <div class="victory-congrats" id="victory-congrats">
+          Congratulations warrior! The beast has been completely demolished.
+        </div>
+        <div class="victory-actions">
+          <button class="btn btn-primary" id="btn-victory-replay">Play Again 🔥</button>
+          <button class="btn btn-glass" id="btn-victory-change-char">Change Character</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/app.js"></script>
+  <script src="js/landing.js"></script>
+  <script src="js/login.js"></script>
+  <script src="js/profile.js"></script>
+  <script src="js/battle.js"></script>
+</body>
+</html>
