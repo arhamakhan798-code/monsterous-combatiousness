@@ -2874,6 +2874,101 @@ input:focus-visible,
   font-size: clamp(0.85rem, 2.2vw, 1rem);
 }
 
+
+/* ===== SEX SELECTION ON PROFILE PAGE ===== */
+.sex-select-group {
+  margin-top: clamp(6px, 1.5vh, 12px);
+}
+.sex-select-label {
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
+  font-weight: 600;
+  color: var(--color-text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: center;
+  margin-bottom: clamp(8px, 1.5vh, 14px);
+}
+.sex-select-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(12px, 2.5vw, 24px);
+}
+.sex-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(14px, 2.2vh, 22px) clamp(10px, 2vw, 20px);
+  background: rgba(255, 255, 255, 0.04);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  user-select: none;
+  font-family: inherit;
+  color: #fff;
+}
+.sex-card:hover {
+  border-color: var(--color-blood-red);
+  background: rgba(220, 20, 60, 0.08);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(220, 20, 60, 0.35);
+}
+.sex-card.selected {
+  border-color: var(--color-blood-red);
+  background: rgba(220, 20, 60, 0.22);
+  box-shadow: 0 0 25px rgba(220, 20, 60, 0.65), inset 0 0 15px rgba(220, 20, 60, 0.25);
+  transform: translateY(-2px);
+}
+.sex-icon {
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  line-height: 1;
+  margin-bottom: 6px;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.6));
+}
+.sex-name {
+  font-size: clamp(0.95rem, 2vw, 1.15rem);
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* Enhanced Battle Fighter Card Images */
+.battle-char-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.battle-char-img-wrap {
+  width: 100%;
+  height: clamp(180px, 32vh, 320px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  background: radial-gradient(circle at center, rgba(220, 20, 60, 0.15) 0%, transparent 75%);
+}
+.battle-char-img-wrap img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.8));
+  transition: transform 0.35s ease, filter 0.35s ease;
+}
+.battle-char-card:hover .battle-char-img-wrap img {
+  transform: scale(1.08);
+  filter: drop-shadow(0 12px 24px rgba(220, 20, 60, 0.6));
+}
+.battle-char-card.selected .battle-char-img-wrap img {
+  transform: scale(1.12);
+  filter: drop-shadow(0 15px 30px rgba(220, 20, 60, 0.9)) brightness(1.05);
+}
+
 </style>
 </head>
 <body>
@@ -2963,19 +3058,21 @@ input:focus-visible,
           </div>
         </div>
 
-        <!-- Character Selection -->
-        <div>
-          <p class="char-select-label">Choose Your Fighter</p>
-          <div class="char-select-grid">
-            <div class="char-card" id="char-male" data-char="male">
-              <img class="char-card-img" src="assets/male-char.png" alt="Male Fighter" draggable="false">
-              <span class="char-card-name">Shadow</span>
-            </div>
-            <div class="char-card" id="char-female" data-char="female">
-              <img class="char-card-img" src="assets/female-char.png" alt="Female Fighter" draggable="false">
-              <span class="char-card-name">Blade</span>
-            </div>
+        <!-- Gender / Sex Selection Only -->
+        <div class="sex-select-group">
+          <p class="sex-select-label">Select Your Sex</p>
+          <div class="sex-select-grid" id="sex-select-grid">
+            <button type="button" class="sex-card" data-sex="male" id="sex-male">
+              <span class="sex-icon">♂</span>
+              <span class="sex-name">Male</span>
+            </button>
+            <button type="button" class="sex-card" data-sex="female" id="sex-female">
+              <span class="sex-icon">♀</span>
+              <span class="sex-name">Female</span>
+            </button>
           </div>
+          <input type="hidden" id="profile-sex" name="sex" value="">
+        </div>
         </div>
 
         <button type="submit" class="btn btn-primary profile-submit">Ready to Fight 🔥</button>
@@ -2993,18 +3090,22 @@ input:focus-visible,
         
         <div class="battle-char-grid">
           <div class="battle-char-card" data-char="male">
-            <div class="battle-char-icon">⚔️</div>
+            <div class="battle-char-img-wrap">
+              <img src="assets/male-char.png" alt="Shadow" draggable="false">
+            </div>
             <h3>SHADOW</h3>
-            <p class="battle-char-desc">Balanced. Skilled. Deadly.</p>
+            <p class="battle-char-desc">Balanced • Skilled • Deadly</p>
           </div>
           <div class="battle-char-card" data-char="female">
-            <div class="battle-char-icon">🗡️</div>
+            <div class="battle-char-img-wrap">
+              <img src="assets/female-char.png" alt="Blade" draggable="false">
+            </div>
             <h3>BLADE</h3>
-            <p class="battle-char-desc">Swift. Aggressive. Unstoppable.</p>
+            <p class="battle-char-desc">Swift • Aggressive • Lethal</p>
           </div>
         </div>
-        
-        <button id="btn-start-fight" class="btn-start-fight" disabled>START FIGHT</button>
+
+        <button id="btn-start-fight"  class="btn-start-fight" disabled>START FIGHT</button>
       </div>
     </div>
 
@@ -3589,64 +3690,46 @@ document.addEventListener('DOMContentLoaded', () => {
   const nameInput = document.getElementById('profile-name');
   const ageInput  = document.getElementById('profile-age');
   const errorEl   = document.getElementById('profile-error');
-  const charGrid  = document.querySelector('.char-select-grid');
-  const charCards = document.querySelectorAll('.char-card');
+    const sexGrid   = document.getElementById('sex-select-grid');
+  const sexCards  = document.querySelectorAll('.sex-card');
+  const sexInput  = document.getElementById('profile-sex');
   const btnBack   = document.getElementById('btn-back-to-login');
   const submitBtn = form ? form.querySelector('[type="submit"]') : null;
 
   /* ------------------------------------------------------------------
      VALID character keys — must match data-char and asset filenames
   ------------------------------------------------------------------ */
-  const VALID_CHARS = new Set(['male', 'female']);
+  const VALID_SEX = new Set(['male', 'female']);
 
-  /* ------------------------------------------------------------------
-     _setSelection — the ONE place that changes the active character.
-     Updates App.state, saves to localStorage, and syncs the DOM.
-  ------------------------------------------------------------------ */
-  function _setSelection(charKey) {
-    if (!VALID_CHARS.has(charKey)) return;
-
-    App.state.selectedChar = charKey;
+  function _setSexSelection(sexKey) {
+    if (!VALID_SEX.has(sexKey)) return;
+    App.state.sex = sexKey;
+    if (sexInput) sexInput.value = sexKey;
     App.saveState();
-    _syncCards();
+    _syncSexCards();
     _syncSubmitButton();
     _clearError();
   }
 
-  /* ------------------------------------------------------------------
-     _syncCards — reflects App.state.selectedChar in the DOM.
-     Idempotent: safe to call multiple times.
-  ------------------------------------------------------------------ */
-  function _syncCards() {
-    const active = App.state.selectedChar;
-    const hasSelection = VALID_CHARS.has(active);
-
-    charCards.forEach(card => {
-      const isSelected = card.dataset.char === active;
+  function _syncSexCards() {
+    const active = App.state.sex || (sexInput ? sexInput.value : '');
+    sexCards.forEach(card => {
+      const isSelected = card.dataset.sex === active;
       card.classList.toggle('selected', isSelected);
-      // ARIA for accessibility
       card.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
     });
-
-    // Add/remove dimming class on the grid
-    if (charGrid) {
-      charGrid.classList.toggle('has-selection', hasSelection);
-    }
   }
 
-  /* ------------------------------------------------------------------
-     _syncSubmitButton — dim the button when nothing is selected.
-  ------------------------------------------------------------------ */
   function _syncSubmitButton() {
     if (!submitBtn) return;
-    const ready = VALID_CHARS.has(App.state.selectedChar);
+    const ready = VALID_SEX.has(App.state.sex);
     submitBtn.disabled = false;
     submitBtn.classList.remove('loading');
-    submitBtn.textContent = 'Ready to Fight 🔥';
+    submitBtn.textContent = 'Continue to Arena ⚔️';
     submitBtn.style.opacity = ready ? '1' : '0.55';
     submitBtn.title = ready
       ? 'Ready to Fight!'
-      : 'Select a fighter first';
+      : 'Select your sex first';
   }
 
   /* ------------------------------------------------------------------
@@ -3659,12 +3742,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (ageInput  && App.state.age)      ageInput.value  = App.state.age;
 
     // Validate persisted selectedChar — if it's corrupt, clear it
-    if (App.state.selectedChar && !VALID_CHARS.has(App.state.selectedChar)) {
-      App.state.selectedChar = null;
+    if (App.state.sex && !VALID_SEX.has(App.state.sex)) {
+      App.state.sex = null;
       App.saveState();
     }
 
-    _syncCards();
+    _syncSexCards();
     _syncSubmitButton();
     _clearError();
   }
@@ -3693,28 +3776,11 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ------------------------------------------------------------------
      Character card click — instant, idempotent selection
   ------------------------------------------------------------------ */
-  charCards.forEach(card => {
-    // Make card keyboard-accessible
-    card.setAttribute('role', 'button');
-    card.setAttribute('tabindex', '0');
-
-    const handleSelect = () => {
-      const charKey = card.dataset.char;
-      if (!VALID_CHARS.has(charKey)) return;
-
-      // Already selected — no-op (keeps state stable on accidental re-clicks)
-      if (App.state.selectedChar === charKey) return;
-
-      _setSelection(charKey);
-    };
-
-    card.addEventListener('click', handleSelect);
-
-    // Keyboard support: Enter or Space activates the card
-    card.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        handleSelect();
+  sexCards.forEach(card => {
+    card.addEventListener('click', () => {
+      const s = card.dataset.sex;
+      if (VALID_SEX.has(s)) {
+        _setSexSelection(s);
       }
     });
   });
@@ -3757,15 +3823,15 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // 3. Validate Character Selection — read ONLY from App.state (single source of truth)
-    const selectedChar = App.state.selectedChar;
-    if (!VALID_CHARS.has(selectedChar)) {
-      showError('Pick a fighter, coward!');
-      if (charGrid) {
-        charGrid.classList.remove('error-shake');
-        void charGrid.offsetWidth; // reflow for re-trigger
-        charGrid.classList.add('error-shake');
-        setTimeout(() => charGrid.classList.remove('error-shake'), 600);
+    // 3. Validate Sex Selection
+    const selectedSex = App.state.sex || (sexInput ? sexInput.value : '');
+    if (!VALID_SEX.has(selectedSex)) {
+      showError('Please select your sex to proceed!');
+      if (sexGrid) {
+        sexGrid.classList.remove('error-shake');
+        void sexGrid.offsetWidth;
+        sexGrid.classList.add('error-shake');
+        setTimeout(() => sexGrid.classList.remove('error-shake'), 600);
       }
       return;
     }
@@ -3774,13 +3840,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (submitBtn) {
       submitBtn.disabled = true;
       submitBtn.classList.add('loading');
-      submitBtn.textContent = 'Entering Arena...';
+      submitBtn.textContent = 'Proceeding to Fighter Selection...';
     }
 
     // Save state
     App.state.username     = name;
     App.state.age          = age;
-    App.state.selectedChar = selectedChar;
+    App.state.sex = selectedSex;
     App.saveState();
 
     // Navigate to battle with slight transition for responsiveness
@@ -3803,7 +3869,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnBack) {
     btnBack.addEventListener('click', () => {
       App.clearState();
-      _syncCards();          // clears .selected from all cards
+      _syncSexCards();          // clears .selected from all cards
       _syncSubmitButton();
       if (nameInput) nameInput.value = '';
       if (ageInput)  ageInput.value  = '';
