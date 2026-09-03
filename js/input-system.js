@@ -54,6 +54,8 @@ const InputSystem = {
   },
   
   _handleKeyDown(e) {
+    if (['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) return;
+    if (window.App?.currentPage !== 'battle-page') return;
     if (this.activeKeys.has(e.code)) return;  // Debounce
     this.activeKeys.add(e.code);
     
@@ -155,22 +157,22 @@ const InputSystem = {
       case 'punch':
       case 'swipe-left':
       case 'swipe-up':
-        if (window.BattleEngine?.el?.btnA) {
-          window.BattleEngine.el.btnA.click();
+        if (window.BattleEngine?._playerMove) {
+          window.BattleEngine._playerMove('A');
         }
         break;
         
       case 'kick':
       case 'swipe-right':
-        if (window.BattleEngine?.el?.btnB) {
-          window.BattleEngine.el.btnB.click();
+        if (window.BattleEngine?._playerMove) {
+          window.BattleEngine._playerMove('B');
         }
         break;
         
       case 'heal':
       case 'swipe-down':
-        if (window.BattleEngine?.el?.btnC) {
-          window.BattleEngine.el.btnC.click();
+        if (window.BattleEngine?._playerMove) {
+          window.BattleEngine._playerMove('C');
         }
         break;
         
