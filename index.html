@@ -2117,8 +2117,8 @@ input:focus-visible,
   position: absolute;
   bottom: clamp(14px, 3vh, 32px);
   left: clamp(12px, 3.5vw, 36px);
-  pointer-events: auto;
-  z-index: 27;
+  pointer-events: auto !important;
+  z-index: 50 !important;
 }
 
 /* Right-most Dock: Diagonal Attacks (Right Hand) */
@@ -2130,8 +2130,14 @@ input:focus-visible,
   grid-template-columns: repeat(2, auto);
   grid-template-rows: repeat(2, auto);
   gap: clamp(4px, 1vh, 8px) clamp(8px, 2vw, 16px);
-  pointer-events: auto;
-  z-index: 27;
+  pointer-events: auto !important;
+  z-index: 50 !important;
+}
+
+.action-btn {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  user-select: none;
 }
 
 /* Diagonal positioning: Punch at Top-Left, Kick at Bottom-Right */
@@ -2969,6 +2975,246 @@ input:focus-visible,
   filter: drop-shadow(0 15px 30px rgba(220, 20, 60, 0.9)) brightness(1.05);
 }
 
+
+/* === char-select.css === */
+/* ===== DEDICATED CHARACTER SELECTION PAGE ===== */
+#char-select-page {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at center bottom, #1e0e18 0%, #0d0a14 55%, #050408 100%);
+  position: relative;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: clamp(var(--space-md), 3vh, var(--space-2xl)) clamp(var(--space-sm), 3vw, var(--space-xl));
+}
+
+.char-select-container {
+  width: 100%;
+  max-width: 760px;
+  margin: auto;
+  z-index: 1;
+  background: rgba(16, 14, 26, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-radius: var(--radius-xl);
+  padding: clamp(20px, 3vh, 32px) clamp(16px, 3.5vw, 32px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.char-select-header {
+  text-align: center;
+  margin-bottom: clamp(16px, 2.5vh, 24px);
+}
+
+.char-select-title {
+  font-family: var(--font-title);
+  font-size: clamp(1.8rem, 6vw, 2.6rem);
+  color: var(--color-gold);
+  margin-bottom: var(--space-xs);
+  text-shadow: 0 0 20px rgba(218, 165, 32, 0.4);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.char-select-subtitle {
+  font-size: clamp(0.8rem, 2vw, 0.92rem);
+  color: var(--color-text-dim);
+}
+
+.char-choice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(12px, 2.5vw, 24px);
+  margin-bottom: clamp(18px, 3vh, 28px);
+}
+
+.char-choice-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(14px, 2.5vh, 20px) clamp(12px, 2vw, 18px);
+  background: rgba(255, 255, 255, 0.03);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  user-select: none;
+  overflow: hidden;
+}
+
+.char-choice-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(218, 165, 32, 0.08) 0%, transparent 60%, rgba(220, 20, 60, 0.08) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.char-choice-card:hover {
+  border-color: rgba(218, 165, 32, 0.5);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(218, 165, 32, 0.25);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.char-choice-card:hover::before { opacity: 1; }
+
+.char-choice-card.selected {
+  border-color: var(--color-gold-bright);
+  background: rgba(218, 165, 32, 0.1);
+  box-shadow: 0 0 30px rgba(218, 165, 32, 0.4), inset 0 0 16px rgba(218, 165, 32, 0.1);
+  transform: translateY(-3px) scale(1.02);
+}
+
+.char-choice-card.selected::after {
+  content: '✓';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 26px;
+  height: 26px;
+  background: var(--color-gold-bright);
+  color: #000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 0.85rem;
+  z-index: 5;
+  animation: checkPop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.char-choice-img-wrap {
+  width: 100%;
+  height: clamp(130px, 22vh, 190px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-sm);
+  position: relative;
+}
+
+.char-choice-img-wrap img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.7));
+  transition: transform 0.3s ease;
+}
+
+.char-choice-card:hover .char-choice-img-wrap img {
+  transform: scale(1.06);
+}
+
+.char-choice-card.selected .char-choice-img-wrap img {
+  transform: scale(1.08);
+  filter: drop-shadow(0 8px 20px rgba(218, 165, 32, 0.5));
+}
+
+.char-choice-name {
+  font-family: var(--font-mono);
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin-bottom: 2px;
+}
+
+.char-choice-title {
+  font-size: clamp(0.72rem, 1.8vw, 0.82rem);
+  color: var(--color-gold);
+  font-style: italic;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.char-choice-stats {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+}
+
+.stat-label {
+  color: var(--color-text-dim);
+  width: 55px;
+  text-transform: uppercase;
+}
+
+.stat-bar-outer {
+  flex: 1;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.stat-bar-inner {
+  height: 100%;
+  border-radius: 3px;
+}
+
+.stat-bar-red { background: linear-gradient(90deg, #ff3355, #dc143c); }
+.stat-bar-gold { background: linear-gradient(90deg, #ffd700, #daa520); }
+.stat-bar-blue { background: linear-gradient(90deg, #00d4ff, #0088ff); }
+
+.stat-val {
+  color: #fff;
+  width: 24px;
+  text-align: right;
+  font-weight: 600;
+}
+
+.special-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(220, 20, 60, 0.15);
+  border: 1px solid rgba(220, 20, 60, 0.35);
+  border-radius: var(--radius-full);
+  padding: 3px 10px;
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  color: #ff99aa;
+  margin-top: 4px;
+}
+
+.char-select-submit {
+  width: 100%;
+  padding: clamp(14px, 2.2vh, 18px);
+  font-size: clamp(1rem, 2.5vw, 1.15rem);
+  font-family: var(--font-mono);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+@media (max-width: 580px) {
+  .char-choice-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .char-choice-img-wrap {
+    height: 140px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -3073,37 +3319,86 @@ input:focus-visible,
           </div>
           <input type="hidden" id="profile-sex" name="sex" value="">
         </div>
-        </div>
 
-        <button type="submit" class="btn btn-primary profile-submit">Ready to Fight 🔥</button>
+        <button type="submit" class="btn btn-primary profile-submit">Next: Choose Character ⚔️</button>
       </form>
     </div>
   </div>
 
-  <!-- ===== PAGE 4: BATTLE ARENA ===== -->
-  <div id="battle-page" class="page">
-    <!-- Pre-Battle Character Selection Screen -->
-    <div id="battle-char-select-overlay" class="battle-char-select-overlay">
-      <div class="battle-char-select-panel">
-        <h1>SELECT YOUR FIGHTER</h1>
-        <p class="select-subtitle">Choose wisely before entering the arena</p>
-        
-        <div class="battle-char-grid">
-          <div class="battle-char-card" data-char="male">
-            <div class="battle-char-img-wrap">
-              <img src="assets/male-char.png" alt="Shadow" draggable="false">
-            </div>
-            <h3>SHADOW</h3>
-            <p class="battle-char-desc">Balanced • Skilled • Deadly</p>
+  
+  <!-- ===== PAGE 4: CHARACTER SELECTION ===== -->
+  <div id="char-select-page" class="page">
+    <button class="back-btn" id="btn-back-to-profile">← Back to Profile</button>
+
+    <div class="char-select-container">
+      <div class="char-select-header">
+        <h2 class="char-select-title">⚔️ Choose Your Fighter</h2>
+        <p class="char-select-subtitle">Select your champion before entering the arena</p>
+      </div>
+
+      <div class="char-choice-grid" id="char-choice-grid">
+        <!-- Fighter 1: Male / Shadow -->
+        <div class="char-choice-card" data-char="male" id="char-card-male">
+          <div class="char-choice-img-wrap">
+            <img src="assets/male-char.png" alt="Shadow" draggable="false">
           </div>
-          <div class="battle-char-card" data-char="female">
-            <div class="battle-char-img-wrap">
-              <img src="assets/female-char.png" alt="Blade" draggable="false">
+          <h3 class="char-choice-name">SHADOW</h3>
+          <p class="char-choice-title">The Phantom Champion</p>
+          <div class="char-choice-stats">
+            <div class="stat-row">
+              <span class="stat-label">Power</span>
+              <div class="stat-bar-outer"><div class="stat-bar-inner stat-bar-red" style="width: 87%"></div></div>
+              <span class="stat-val">87</span>
             </div>
-            <h3>BLADE</h3>
-            <p class="battle-char-desc">Swift • Aggressive • Lethal</p>
+            <div class="stat-row">
+              <span class="stat-label">Speed</span>
+              <div class="stat-bar-outer"><div class="stat-bar-inner stat-bar-gold" style="width: 72%"></div></div>
+              <span class="stat-val">72</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Defense</span>
+              <div class="stat-bar-outer"><div class="stat-bar-inner stat-bar-blue" style="width: 81%"></div></div>
+              <span class="stat-val">81</span>
+            </div>
           </div>
+          <div class="special-pill">⚡ Phantom Strike</div>
         </div>
+
+        <!-- Fighter 2: Female / Blade -->
+        <div class="char-choice-card" data-char="female" id="char-card-female">
+          <div class="char-choice-img-wrap">
+            <img src="assets/female-char.png" alt="Blade" draggable="false">
+          </div>
+          <h3 class="char-choice-name">BLADE</h3>
+          <p class="char-choice-title">Wildfire Assassin</p>
+          <div class="char-choice-stats">
+            <div class="stat-row">
+              <span class="stat-label">Power</span>
+              <div class="stat-bar-outer"><div class="stat-bar-inner stat-bar-red" style="width: 92%"></div></div>
+              <span class="stat-val">92</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Speed</span>
+              <div class="stat-bar-outer"><div class="stat-bar-inner stat-bar-gold" style="width: 85%"></div></div>
+              <span class="stat-val">85</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Defense</span>
+              <div class="stat-bar-outer"><div class="stat-bar-inner stat-bar-blue" style="width: 78%"></div></div>
+              <span class="stat-val">78</span>
+            </div>
+          </div>
+          <div class="special-pill">🔥 Inferno Combo</div>
+        </div>
+      </div>
+
+      <button id="btn-enter-battle" class="btn btn-primary char-select-submit">Enter Battle Arena 🔥</button>
+    </div>
+  </div>
+
+  <!-- ===== PAGE 5: BATTLE ARENA ===== -->
+  <div id="battle-page" class="page">
+    
 
         <button id="btn-start-fight"  class="btn-start-fight" disabled>START FIGHT</button>
       </div>
@@ -3185,7 +3480,7 @@ input:focus-visible,
 
       <!-- Left-most Side: Heal Control (Left Hand) -->
       <div class="dock-left">
-        <button class="action-btn btn-heal" id="btn-heal" data-action="C" data-key="C" aria-label="Heal (Key C)">
+        <button class="action-btn btn-heal" id="btn-heal" data-action="C" data-key="C" aria-label="Heal (Key C)" onclick="if(window.BattleEngine){window.BattleEngine._playerMove('C');}">
           <span class="action-icon">&#x1F49A;</span>
           <span class="action-label">Heal</span>
         </button>
@@ -3193,11 +3488,11 @@ input:focus-visible,
 
       <!-- Right-most Side: Diagonal Attack Controls (Right Hand) -->
       <div class="dock-right">
-        <button class="action-btn btn-fist diag-top-left" id="btn-fist" data-action="A" data-key="A" aria-label="Punch (Key A)">
+        <button class="action-btn btn-fist diag-top-left" id="btn-fist" data-action="A" data-key="A" aria-label="Punch (Key A)" onclick="if(window.BattleEngine){window.BattleEngine._playerMove('A');}">
           <span class="action-icon">&#x1F44A;</span>
           <span class="action-label">Punch</span>
         </button>
-        <button class="action-btn btn-kick diag-bottom-right" id="btn-kick" data-action="B" data-key="B" aria-label="Kick (Key B)">
+        <button class="action-btn btn-kick diag-bottom-right" id="btn-kick" data-action="B" data-key="B" aria-label="Kick (Key B)" onclick="if(window.BattleEngine){window.BattleEngine._playerMove('B');}">
           <span class="action-icon">&#x1F9B6;</span>
           <span class="action-label">Kick</span>
         </button>
@@ -3223,7 +3518,7 @@ input:focus-visible,
       <div class="defeat-end-content" id="defeat-end-content">
         <h1 class="defeat-end-title" id="defeat-end-title">END</h1>
         <div class="defeat-quote" id="defeat-quote">
-          "Useless nobody! Get your dirty loser ass out of my sight"
+          "Pathetic amateur! Crawl out of my arena before I finish you!"
         </div>
         <div class="defeat-actions">
           <button class="btn btn-primary" id="btn-defeat-retry">Try Again ⚔️</button>
@@ -3274,6 +3569,7 @@ const App = {
     email: '',
     username: '',
     age: 0,
+    sex: null,
     selectedChar: null, // 'male' or 'female'
   },
 
@@ -3286,21 +3582,13 @@ const App = {
   showPage(pageId) {
     // If logged-in user visits login page, advance them forward
     if (pageId === 'login-page' && this.state.isLoggedIn) {
-      const hasValidName = this.state.username && this.state.username.trim().length > 0;
-      const hasValidAge = this.state.age && Number(this.state.age) >= 1;
-      const hasSelectedChar = this.state.selectedChar === 'male' || this.state.selectedChar === 'female';
-
-      if (hasValidName && hasValidAge && hasSelectedChar) {
-        pageId = 'battle-page';
-      } else {
-        pageId = 'profile-page';
-      }
+      const hasValidProfile = this.state.username && this.state.age && this.state.sex;
+      pageId = hasValidProfile ? 'char-select-page' : 'profile-page';
     }
 
-    // 1. Strict Auth Guard: User MUST be logged in to access profile or game arena
-    if ((pageId === 'profile-page' || pageId === 'battle-page') && !this.state.isLoggedIn) {
+    // 1. Strict Auth Guard: User MUST be logged in
+    if ((pageId === 'profile-page' || pageId === 'char-select-page' || pageId === 'battle-page') && !this.state.isLoggedIn) {
       pageId = 'login-page';
-      
       setTimeout(() => {
         const errorEl = document.getElementById('login-error');
         if (errorEl) {
@@ -3311,22 +3599,35 @@ const App = {
       }, 250);
     }
 
-    // 2. Strict Profile Guard: Must have Name, Age, and Selected Character before Battle Arena
-    if (pageId === 'battle-page') {
+    // 2. Profile Guard: Must have Name, Age, Sex before Char Select or Battle
+    if (pageId === 'char-select-page' || pageId === 'battle-page') {
       const hasValidName = this.state.username && this.state.username.trim().length > 0;
       const hasValidAge = this.state.age && Number(this.state.age) >= 1;
-      const hasSelectedChar = this.state.selectedChar === 'male' || this.state.selectedChar === 'female';
+      const hasValidSex = this.state.sex === 'male' || this.state.sex === 'female';
 
-      if (!hasValidName || !hasValidAge || !hasSelectedChar) {
+      if (!hasValidName || !hasValidAge || !hasValidSex) {
         pageId = 'profile-page';
         setTimeout(() => {
           const errorEl = document.getElementById('profile-error');
           if (errorEl) {
-            errorEl.textContent = '⚠️ Mandatory: You must enter your name, age, and choose a fighter before battle!';
+            errorEl.textContent = '⚠️ Mandatory: Please enter your name, age, and select your sex!';
             errorEl.classList.add('visible');
             setTimeout(() => errorEl.classList.remove('visible'), 5000);
           }
         }, 250);
+      }
+    }
+
+    // 3. Char Select Guard: Must have selected a fighter before battle
+    if (pageId === 'battle-page') {
+      const hasSelectedChar = this.state.selectedChar === 'male' || this.state.selectedChar === 'female';
+      if (!hasSelectedChar) {
+        if (this.state.sex === 'male' || this.state.sex === 'female') {
+          this.state.selectedChar = this.state.sex;
+          this.saveState();
+        } else {
+          pageId = 'char-select-page';
+        }
       }
     }
 
@@ -3347,13 +3648,9 @@ const App = {
           window.Profile.syncUI();
         }
 
-        // Show character selection overlay when entering battle page
-        if (pageId === 'battle-page' && window.BattleInit) {
-          BattleInit.show();
-          // Initialize audio
-          if (window.AudioEngine) {
-            window.AudioEngine.init();
-          }
+        // Re-sync character selection UI when entering char-select page
+        if (pageId === 'char-select-page' && window.CharSelect?.syncUI) {
+          window.CharSelect.syncUI();
         }
 
         // Initialize Battle Engine if entering battle page
@@ -3400,6 +3697,7 @@ const App = {
       email: '',
       username: '',
       age: 0,
+      sex: null,
       selectedChar: null,
     };
     localStorage.removeItem('mc_state');
@@ -3495,7 +3793,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (hasValidName && hasValidAge && hasSelectedChar) {
         App.showPage('battle-page');
       } else {
-        App.showPage('profile-page');
+        App.showPage('char-select-page');
       }
     } else {
       App.showPage('login-page');
@@ -3704,6 +4002,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function _setSexSelection(sexKey) {
     if (!VALID_SEX.has(sexKey)) return;
     App.state.sex = sexKey;
+    App.state.selectedChar = sexKey;
     if (sexInput) sexInput.value = sexKey;
     App.saveState();
     _syncSexCards();
@@ -3712,7 +4011,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function _syncSexCards() {
-    const active = App.state.sex || (sexInput ? sexInput.value : '');
+    const active = App.state.sex || App.state.selectedChar || (sexInput ? sexInput.value : '');
     sexCards.forEach(card => {
       const isSelected = card.dataset.sex === active;
       card.classList.toggle('selected', isSelected);
@@ -3722,13 +4021,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function _syncSubmitButton() {
     if (!submitBtn) return;
-    const ready = VALID_SEX.has(App.state.sex);
+    const active = App.state.sex;
+    const ready = VALID_SEX.has(active);
     submitBtn.disabled = false;
     submitBtn.classList.remove('loading');
-    submitBtn.textContent = 'Continue to Arena ⚔️';
-    submitBtn.style.opacity = ready ? '1' : '0.55';
+    submitBtn.textContent = 'Next: Choose Character ⚔️';
+    submitBtn.style.opacity = ready ? '1' : '0.7';
     submitBtn.title = ready
-      ? 'Ready to Fight!'
+      ? 'Continue to Fighter Selection'
       : 'Select your sex first';
   }
 
@@ -3741,11 +4041,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (nameInput && App.state.username) nameInput.value = App.state.username;
     if (ageInput  && App.state.age)      ageInput.value  = App.state.age;
 
-    // Validate persisted selectedChar — if it's corrupt, clear it
-    if (App.state.sex && !VALID_SEX.has(App.state.sex)) {
+    // Validate persisted selectedChar / sex
+    const active = App.state.sex || App.state.selectedChar;
+    if (active && VALID_SEX.has(active)) {
+      App.state.sex = active;
+      App.state.selectedChar = active;
+      if (sexInput) sexInput.value = active;
+    } else {
       App.state.sex = null;
-      App.saveState();
+      App.state.selectedChar = null;
+      if (sexInput) sexInput.value = '';
     }
+    App.saveState();
 
     _syncSexCards();
     _syncSubmitButton();
@@ -3796,7 +4103,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 1. Validate Name
     if (!name) {
-      showError('Write your name dumbass!');
+      showError('Enter your name, rookie!');
       nameInput.focus();
       return;
     }
@@ -3846,12 +4153,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Save state
     App.state.username     = name;
     App.state.age          = age;
-    App.state.sex = selectedSex;
+    App.state.sex          = selectedSex;
+    // Default character selection to match selected sex (can be changed on next screen)
+    if (!App.state.selectedChar) {
+      App.state.selectedChar = selectedSex;
+    }
     App.saveState();
 
-    // Navigate to battle with slight transition for responsiveness
+    // Navigate to dedicated Character Selection page
     setTimeout(() => {
-      App.showPage('battle-page');
+      App.showPage('char-select-page');
     }, 180);
   });
 
@@ -3876,6 +4187,84 @@ document.addEventListener('DOMContentLoaded', () => {
       App.showPage('login-page');
     });
   }
+});
+
+
+/* === char-select.js === */
+/**
+ * char-select.js — Character Selection Page Logic
+ * Dedicated champion choice screen before entering the arena.
+ */
+document.addEventListener('DOMContentLoaded', () => {
+  const cards = document.querySelectorAll('.char-choice-card');
+  const startBtn = document.getElementById('btn-enter-battle');
+  const backBtn = document.getElementById('btn-back-to-profile');
+
+  const CharSelect = {
+    selectedChar: null,
+
+    init() {
+      // Character choice card clicks
+      cards.forEach(card => {
+        card.addEventListener('click', () => {
+          const char = card.dataset.char;
+          if (char === 'male' || char === 'female') {
+            this.selectCharacter(char);
+          }
+        });
+      });
+
+      // Enter Battle button
+      startBtn?.addEventListener('click', () => {
+        const char = this.selectedChar || App.state.selectedChar || App.state.sex || 'male';
+        App.state.selectedChar = char;
+        App.saveState();
+
+        if (startBtn) {
+          startBtn.disabled = true;
+          startBtn.textContent = 'Entering Arena...';
+        }
+
+        setTimeout(() => {
+          if (startBtn) {
+            startBtn.disabled = false;
+            startBtn.textContent = 'Enter Battle Arena 🔥';
+          }
+          App.showPage('battle-page');
+        }, 200);
+      });
+
+      // Back to Profile button
+      backBtn?.addEventListener('click', () => {
+        App.showPage('char-select-page');
+      });
+    },
+
+    selectCharacter(char) {
+      this.selectedChar = char;
+      App.state.selectedChar = char;
+      App.saveState();
+      this.syncUI();
+    },
+
+    syncUI() {
+      const activeChar = App.state.selectedChar || App.state.sex || 'male';
+      this.selectedChar = activeChar;
+
+      cards.forEach(card => {
+        const isSelected = card.dataset.char === activeChar;
+        card.classList.toggle('selected', isSelected);
+      });
+
+      if (startBtn) {
+        startBtn.disabled = false;
+        startBtn.textContent = 'Enter Battle Arena 🔥';
+      }
+    }
+  };
+
+  CharSelect.init();
+  window.CharSelect = CharSelect;
 });
 
 /* === battle.js === */
@@ -3908,6 +4297,9 @@ const SoundFX = {
     if (!this.ctx) {
       const A = window.AudioContext || window.webkitAudioContext;
       if (A) this.ctx = new A();
+    }
+    if (this.ctx && this.ctx.state === 'suspended') {
+      this.ctx.resume().catch(() => {});
     }
     return this.ctx;
   },
@@ -4324,23 +4716,28 @@ const BattleEngine = {
      _setupButtons — attach listeners (only once, uses event delegation & keyboard)
   ------------------------------------------------------------------ */
   _setupButtons() {
-    // Action buttons — use event delegation on parent
-    const actionsEl = document.getElementById('battle-actions');
-    if (actionsEl && !actionsEl._listenerAttached) {
-      actionsEl._listenerAttached = true;
-      actionsEl.addEventListener('click', e => {
-        const btn = e.target.closest('.action-btn');
-        if (!btn || this.state.busy || this.state.over) return;
-        this._ripple(btn, e);
-        this._playerMove(btn.dataset.action);
+    // Action button listeners
+    const punchBtn = document.getElementById('btn-fist');
+    const kickBtn = document.getElementById('btn-kick');
+    const healBtn = document.getElementById('btn-heal');
+
+    const bindBtn = (el, action) => {
+      if (!el || el._bound) return;
+      el._bound = true;
+      el.addEventListener('click', e => {
+        if (e) this._ripple(el, e);
+        this._playerMove(action);
       });
-    }
+    };
+
+    bindBtn(punchBtn, 'A');
+    bindBtn(kickBtn, 'B');
+    bindBtn(healBtn, 'C');
 
     // Keyboard action listener (A/1 for Fist, B/2 for Kick, C/3 for Heal)
     if (!window._battleKeyAttached) {
       window._battleKeyAttached = true;
       window.addEventListener('keydown', e => {
-        // Only active when currently inside battle arena
         if (window.App?.currentPage !== 'battle-page') return;
         if (['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) return;
         if (this.state.busy || this.state.over) return;
@@ -4364,14 +4761,14 @@ const BattleEngine = {
     // Victory change char
     this._btn('btn-victory-change-char', () => {
       this._hideVictory();
-      App.showPage('profile-page');
+      App.showPage('char-select-page');
     });
     // Defeat retry
     this._btn('btn-defeat-retry', () => this._resetGame());
     // Defeat change char
     this._btn('btn-defeat-change-char', () => {
       this._hideDefeat();
-      App.showPage('profile-page');
+      App.showPage('char-select-page');
     });
     // In-game leave battle button -> return to fighter selection
     this._btn('btn-battle-leave', () => {
@@ -4380,7 +4777,7 @@ const BattleEngine = {
       this.state.over = true;
       this._hideDefeat();
       this._hideVictory();
-      App.showPage('profile-page');
+      App.showPage('char-select-page');
     });
     // Music toggle button
     this._btn('btn-music-toggle', () => {
@@ -4508,10 +4905,13 @@ const BattleEngine = {
     btns.forEach(b => {
       if (on) {
         b.classList.remove('disabled', 'btn-busy');
+        b.removeAttribute('disabled');
         b.disabled = false;
+        b.style.pointerEvents = 'auto';
       } else {
         b.classList.add('disabled');
         b.disabled = true;
+        b.setAttribute('disabled', 'true');
         if (activeAction && b.dataset.action === activeAction) {
           b.classList.add('btn-busy');
         } else {
@@ -4796,8 +5196,8 @@ const BattleEngine = {
         }, 620);
       }, 340);
 
-    } else if (move === 'C') {                    // Heal: +20..30 HP ≤ 100
-      const hp = this._rand(20, 30);
+    } else if (move === 'C') {                    // Heal: +30..60 HP ≤ 100
+      const hp = this._rand(30, 60);
       SoundFX.playHeal();
       this.el.player.classList.add('anim-heal');
       this._healParticles();
