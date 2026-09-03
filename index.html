@@ -3398,11 +3398,6 @@ input:focus-visible,
 
   <!-- ===== PAGE 5: BATTLE ARENA ===== -->
   <div id="battle-page" class="page">
-    
-
-        <button id="btn-start-fight"  class="btn-start-fight" disabled>START FIGHT</button>
-      </div>
-    </div>
 
     <!-- Background -->
     <div class="battle-bg">
@@ -3414,7 +3409,6 @@ input:focus-visible,
       <div class="health-bar-container">
         <div class="health-bar-header">
           <button class="battle-nav-btn" id="btn-battle-leave" title="Return to Fighter Selection">‹ Fighters</button>
-          <button class="battle-nav-btn" id="btn-music-toggle" title="Toggle Music">🎵</button>
           <div class="health-bar-name" id="player-name-display">
             <span class="turn-dot" id="player-turn-dot"></span>
             <span id="player-name-text">PLAYER</span>
@@ -3518,7 +3512,7 @@ input:focus-visible,
       <div class="defeat-end-content" id="defeat-end-content">
         <h1 class="defeat-end-title" id="defeat-end-title">END</h1>
         <div class="defeat-quote" id="defeat-quote">
-          "Pathetic amateur! Crawl out of my arena before I finish you!"
+          "Monster: Useless nobody! Drag your bruised, pathetic self out of my sight!"
         </div>
         <div class="defeat-actions">
           <button class="btn btn-primary" id="btn-defeat-retry">Try Again ⚔️</button>
@@ -3532,7 +3526,7 @@ input:focus-visible,
       <div class="victory-end-content" id="victory-end-content">
         <h1 class="victory-end-title" id="victory-end-title">END</h1>
         <div class="victory-monster-quote" id="victory-monster-quote">
-          "Monster: You fool, you got some moves! But I'll crush you!"
+          "Monster: Argh! You actually pack a punch, you sneaky troublemaker!"
         </div>
         <div class="victory-congrats" id="victory-congrats">
           Congratulations warrior! The beast has been completely demolished.
@@ -3655,9 +3649,7 @@ const App = {
 
         // Initialize Battle Engine if entering battle page
         if (pageId === 'battle-page') {
-          if (window.AudioEngine) {
-            window.AudioEngine.init();
-          }
+          // Background music removed as requested
           if (typeof BattleEngine !== 'undefined') {
             BattleEngine.init(this.state.username, this.state.selectedChar);
           }
@@ -3788,12 +3780,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (App.state.isLoggedIn) {
       const hasValidName = App.state.username && App.state.username.trim().length > 0;
       const hasValidAge = App.state.age && Number(App.state.age) >= 1;
-      const hasSelectedChar = App.state.selectedChar === 'male' || App.state.selectedChar === 'female';
 
-      if (hasValidName && hasValidAge && hasSelectedChar) {
-        App.showPage('battle-page');
-      } else {
+      if (hasValidName && hasValidAge) {
         App.showPage('char-select-page');
+      } else {
+        App.showPage('profile-page');
       }
     } else {
       App.showPage('login-page');
@@ -3947,7 +3938,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const hasValidAge = App.state.age && Number(App.state.age) >= 1;
       const hasSelectedChar = App.state.selectedChar === 'male' || App.state.selectedChar === 'female';
 
-      App.showPage(hasValidName && hasValidAge && hasSelectedChar ? 'battle-page' : 'profile-page');
+      App.showPage(hasValidName && hasValidAge ? 'char-select-page' : 'profile-page');
     } catch (err) {
       showError(err.message || 'Authentication failed. Please try again.');
       resetSubmitButton();
@@ -5351,7 +5342,7 @@ const BattleEngine = {
     this._shake('violent');
     if (this.el.monster) this._hitBurst(this.el.monster, '💥💥');
     SoundFX.playMonsterCrash();
-    this._speech('Monster: Impressive moves, rookie! But you\'re no match for my power!', 5000);
+    this._speech('Monster: Argh! You actually pack a punch, you sneaky troublemaker!', 5000);
 
     // 2. Player dances ~850ms later
     this._setTimeout(() => {
@@ -5452,8 +5443,6 @@ window.BattleEngine = BattleEngine;
 </script>
 
 <!-- External JS modules -->
-<script src="js/audio.js"></script>
-<script src="js/music-system.js"></script>
 <script src="js/google-backend.js"></script>
 <script src="js/battle-init.js"></script>
 <script src="js/animation-controller.js"></script>
