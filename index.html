@@ -3369,7 +3369,7 @@ input:focus-visible,
   
   <!-- ===== PAGE 4: CHARACTER SELECTION ===== -->
   <div id="char-select-page" class="page">
-    <button class="back-btn" id="btn-back-to-profile">← Back to Profile</button>
+    <button class="back-btn" id="btn-back-to-profile" onclick="App.showPage('profile-page');">← Back to Profile</button>
 
     <div class="char-select-container">
       <div class="char-select-header">
@@ -4259,7 +4259,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Back to Profile button
       backBtn?.addEventListener('click', () => {
-        App.showPage('char-select-page');
+        App.showPage('profile-page');
       });
     },
 
