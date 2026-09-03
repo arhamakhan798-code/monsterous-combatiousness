@@ -286,10 +286,10 @@ html, body {
 /* Kick Attack — forward flying kick lunge toward monster, matching punch range */
 @keyframes kickAttack {
   0%   { transform: scale(1) translateX(0) translateY(0) rotate(0deg); transform-origin: bottom center; }
-  15%  { transform: scale(0.97) translateX(-22px) translateY(8px) rotate(-4deg); transform-origin: bottom center; }
-  42%  { transform: scale(1.18) translateX(clamp(165px, 37vw, 445px)) translateY(-28px) rotate(10deg); transform-origin: bottom center; }
-  56%  { transform: scale(1.2) translateX(clamp(175px, 39vw, 460px)) translateY(-24px) rotate(12deg); transform-origin: bottom center; }
-  75%  { transform: scale(1.05) translateX(clamp(80px, 16vw, 180px)) translateY(-6px) rotate(4deg); transform-origin: bottom center; }
+  18%  { transform: scale(0.98) translateX(-24px) translateY(4px) rotate(-3deg); transform-origin: bottom center; }
+  44%  { transform: scale(1.18) translateX(clamp(170px, 38vw, 455px)) translateY(-20px) rotate(6deg); transform-origin: bottom center; }
+  56%  { transform: scale(1.2) translateX(clamp(180px, 40vw, 470px)) translateY(-16px) rotate(7deg); transform-origin: bottom center; }
+  74%  { transform: scale(1.05) translateX(clamp(80px, 16vw, 180px)) translateY(-4px) rotate(2deg); transform-origin: bottom center; }
   100% { transform: scale(1) translateX(0) translateY(0) rotate(0deg); transform-origin: bottom center; }
 }
 
@@ -3102,8 +3102,6 @@ input:focus-visible,
   margin-bottom: var(--space-sm);
   position: relative;
   overflow: hidden;
-  background: #ffffff;
-  border-radius: 8px 8px 0 0;
 }
 
 .char-choice-img-wrap img {
