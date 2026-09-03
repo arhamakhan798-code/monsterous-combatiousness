@@ -6,13 +6,16 @@
   <meta name="description" content="Monsterous Combatiousness — A dark, brutal combat game. Fight the beast. Survive or perish.">
   <title>Monsterous Combatiousness</title>
 
-  <!-- Stylesheets -->
-  
-  
-  
-  
-  
-
+  <!-- Preload Combat & Character Assets -->
+  <link rel="preload" as="image" href="assets/male-char.png">
+  <link rel="preload" as="image" href="assets/male-punch.png">
+  <link rel="preload" as="image" href="assets/male-kick.png">
+  <link rel="preload" as="image" href="assets/female-char.png">
+  <link rel="preload" as="image" href="assets/female-punch.png">
+  <link rel="preload" as="image" href="assets/female-kick.png">
+  <link rel="preload" as="image" href="assets/char-select-male.png">
+  <link rel="preload" as="image" href="assets/char-select-female.png">
+  <link rel="preload" as="image" href="assets/monster.gif">
   <!-- Favicon (skull emoji as data URI) -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💀</text></svg>">
 <style>
@@ -282,12 +285,12 @@ html, body {
 
 /* Kick Attack — 4-phase: balance preparation -> martial arts leg thrust -> impact freeze-frame -> grounded landing */
 @keyframes kickAttack {
-  0%   { transform: scale(1) translateX(0) translateY(0) rotate(0deg) skewX(0deg); transform-origin: bottom center; }
-  18%  { transform: scale(0.98) translateX(-20px) translateY(8px) rotate(-4deg); transform-origin: bottom center; }
-  44%  { transform: scale(1.2) translateX(clamp(180px, 38vw, 460px)) translateY(-32px) rotate(-22deg) skewX(-10deg); transform-origin: bottom center; }
-  58%  { transform: scale(1.22) translateX(clamp(190px, 40vw, 475px)) translateY(-28px) rotate(-24deg) skewX(-12deg); transform-origin: bottom center; }
-  76%  { transform: scale(1.05) translateX(clamp(70px, 14vw, 160px)) translateY(-6px) rotate(-5deg); transform-origin: bottom center; }
-  100% { transform: scale(1) translateX(0) translateY(0) rotate(0deg) skewX(0deg); transform-origin: bottom center; }
+  0%   { transform: scale(1) translateX(0) translateY(0) rotate(0deg); transform-origin: bottom center; }
+  18%  { transform: scale(0.98) translateX(-18px) translateY(6px) rotate(-3deg); transform-origin: bottom center; }
+  44%  { transform: scale(1.18) translateX(clamp(150px, 34vw, 420px)) translateY(-20px) rotate(5deg); transform-origin: bottom center; }
+  58%  { transform: scale(1.2) translateX(clamp(160px, 36vw, 435px)) translateY(-16px) rotate(6deg); transform-origin: bottom center; }
+  76%  { transform: scale(1.05) translateX(clamp(70px, 14vw, 160px)) translateY(-4px) rotate(2deg); transform-origin: bottom center; }
+  100% { transform: scale(1) translateX(0) translateY(0) rotate(0deg); transform-origin: bottom center; }
 }
 
 /* Monster Counter Attack — heavy menacing lunge smashing the player with claw slash */
@@ -3340,7 +3343,7 @@ input:focus-visible,
         <!-- Fighter 1: Male / Shadow -->
         <div class="char-choice-card" data-char="male" id="char-card-male">
           <div class="char-choice-img-wrap">
-            <img src="assets/male-char.png" alt="Shadow" draggable="false">
+            <img src="assets/char-select-male.png" alt="Shadow" draggable="false">
           </div>
           <h3 class="char-choice-name">SHADOW</h3>
           <p class="char-choice-title">The Phantom Champion</p>
@@ -3367,7 +3370,7 @@ input:focus-visible,
         <!-- Fighter 2: Female / Blade -->
         <div class="char-choice-card" data-char="female" id="char-card-female">
           <div class="char-choice-img-wrap">
-            <img src="assets/female-char.png" alt="Blade" draggable="false">
+            <img src="assets/char-select-female.png" alt="Blade" draggable="false">
           </div>
           <h3 class="char-choice-name">BLADE</h3>
           <p class="char-choice-title">Wildfire Assassin</p>
@@ -3729,6 +3732,17 @@ const App = {
     // Catch unhandled errors gracefully
     window.addEventListener('error', (e) => {
       console.error('[App Error]', e.message);
+    });
+
+    // Preload all fighter and monster combat sprites immediately
+    [
+      'assets/male-char.png', 'assets/male-punch.png', 'assets/male-kick.png', 'assets/male-hurt.png', 'assets/male-victory.png',
+      'assets/female-char.png', 'assets/female-punch.png', 'assets/female-kick.png', 'assets/female-victory.png',
+      'assets/char-select-male.png', 'assets/char-select-female.png',
+      'assets/monster.gif', 'assets/monster-attack.gif', 'assets/bg-arena.jpg'
+    ].forEach(src => {
+      const img = new Image();
+      img.src = src;
     });
 
     // Default to landing page on initial entry
