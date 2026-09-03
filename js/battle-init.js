@@ -42,11 +42,14 @@ const BattleInit = {
     const overlay = document.getElementById('battle-char-select-overlay');
     if (overlay) {
       overlay.classList.remove('hidden');
-      this.selectedCharForBattle = null;
+      const currentChar = (window.App && (window.App.state.selectedChar || window.App.state.sex)) || null;
+      this.selectedCharForBattle = currentChar;
       const startBtn = document.getElementById('btn-start-fight');
-      if (startBtn) startBtn.disabled = true;
-      // Deselect all cards
-      document.querySelectorAll('.battle-char-card').forEach(c => c.classList.remove('selected'));
+      if (startBtn) startBtn.disabled = !currentChar;
+      // Sync selected card state
+      document.querySelectorAll('.battle-char-card').forEach(c => {
+        c.classList.toggle('selected', Boolean(currentChar && c.dataset.char === currentChar));
+      });
     }
   },
 
