@@ -16,6 +16,7 @@
   <link rel="preload" as="image" href="assets/char-select-male.png">
   <link rel="preload" as="image" href="assets/char-select-female.png">
   <link rel="preload" as="image" href="assets/monster.gif">
+  <link rel="preload" as="audio" href="assets/bg-music.mp3">
   <!-- Favicon (skull emoji as data URI) -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💀</text></svg>">
 <style>
@@ -3259,9 +3260,58 @@ input:focus-visible,
   }
 }
 
+/* ===== GLOBAL MUSIC TOGGLE BUTTON ===== */
+.global-music-btn {
+  position: fixed;
+  top: 14px;
+  right: 16px;
+  z-index: 1000;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(16, 14, 26, 0.78);
+  border: 1px solid rgba(255, 215, 0, 0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #ffffff;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.65), 0 0 12px rgba(218, 165, 32, 0.2);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+.global-music-btn:hover {
+  transform: scale(1.08);
+  border-color: var(--color-gold-bright);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.8), 0 0 18px rgba(218, 165, 32, 0.5);
+}
+.global-music-btn:active {
+  transform: scale(0.93);
+}
+.global-music-btn.muted {
+  opacity: 0.65;
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+@media (max-width: 480px) {
+  .global-music-btn {
+    top: 10px;
+    right: 10px;
+    width: 38px;
+    height: 38px;
+    font-size: 1.1rem;
+  }
+}
+
 </style>
 </head>
 <body>
+
+  <!-- Global Music Toggle Button -->
+  <button class="global-music-btn" id="btn-global-music" title="Music: Toggle (M)" aria-label="Toggle Music">🎵</button>
 
   <!-- ===== PAGE 1: LANDING ===== -->
   <div id="landing-page" class="page active">
@@ -4312,6 +4362,100 @@ document.addEventListener('DOMContentLoaded', () => {
  */
 
 'use strict';
+
+/* =====================================================================
+   AUDIO ENGINE — Background Music (sero - UltraVoid)
+   ===================================================================== */
+const AudioEngine = (() => {
+  let audio = null;
+  let enabled = true;
+  let started = false;
+  const STORAGE_KEY = 'mc_music_enabled';
+  const BTN_ID = 'btn-global-music';
+
+  function _restorePreference() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved === 'false') enabled = false;
+  }
+
+  function _createAudio() {
+    if (audio) return;
+    audio = document.createElement('audio');
+    audio.src = 'assets/bg-music.mp3';
+    audio.loop = true;
+    audio.preload = 'auto';
+    audio.volume = 0.45;
+    document.body.appendChild(audio);
+  }
+
+  function _updateBtn() {
+    const btn = document.getElementById(BTN_ID);
+    if (!btn) return;
+    btn.textContent = enabled ? '🎵' : '🔇';
+    btn.classList.toggle('muted', !enabled);
+    btn.title = enabled ? 'Music: ON (click to mute)' : 'Music: OFF (click to unmute)';
+  }
+
+  function _startIfAllowed() {
+    if (!audio || !enabled || started) return;
+    audio.play().then(() => {
+      started = true;
+    }).catch(() => {});
+  }
+
+  function init() {
+    _restorePreference();
+    _createAudio();
+    _updateBtn();
+
+    // Wire toggle button
+    const btn = document.getElementById(BTN_ID);
+    if (btn) {
+      btn.addEventListener('click', () => {
+        toggleMusic();
+        // Ensure audio context is resumed after user gesture
+        _startIfAllowed();
+      });
+    }
+
+    // Start on first user interaction (autoplay policy compliance)
+    const startOnce = () => {
+      _startIfAllowed();
+      document.removeEventListener('click', startOnce, true);
+      document.removeEventListener('keydown', startOnce, true);
+      document.removeEventListener('touchstart', startOnce, true);
+    };
+    document.addEventListener('click', startOnce, { capture: true, passive: true });
+    document.addEventListener('keydown', startOnce, { capture: true, passive: true });
+    document.addEventListener('touchstart', startOnce, { capture: true, passive: true });
+  }
+
+  function toggleMusic() {
+    if (!audio) _createAudio();
+    enabled = !enabled;
+    localStorage.setItem(STORAGE_KEY, String(enabled));
+    if (enabled) {
+      audio.play().then(() => { started = true; }).catch(() => {});
+    } else {
+      audio.pause();
+    }
+    _updateBtn();
+    return enabled;
+  }
+
+  function setEnabled(val) {
+    if (enabled !== val) toggleMusic();
+  }
+
+  return { init, toggleMusic, setEnabled };
+})();
+
+window.AudioEngine = AudioEngine;
+
+// Initialize AudioEngine after DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  AudioEngine.init();
+});
 
 /* =====================================================================
    SOUND FX (Web Audio API)
