@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="description" content="Monsterous Combatiousness — A dark, brutal combat game. Fight the beast. Survive or perish.">
   <title>Monsterous Combatiousness</title>
 
@@ -85,6 +85,11 @@
 html, body {
   width: 100%;
   height: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  min-height: -webkit-fill-available;
+  margin: 0;
+  padding: 0;
   overflow: hidden;
   background: var(--color-bg-primary);
   color: var(--color-text);
@@ -100,9 +105,14 @@ html, body {
   display: none;
   width: 100%;
   height: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  min-height: -webkit-fill-available;
   position: absolute;
   top: 0;
   left: 0;
+  right: 0;
+  bottom: 0;
   overflow: hidden;
 }
 
@@ -1174,23 +1184,49 @@ input:focus-visible,
 /* === battle.css === */
 /* ===== BATTLE ARENA PAGE ===== */
 #battle-page {
-  position: relative;
-  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   width: 100%;
   height: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  min-height: -webkit-fill-available;
+  overflow: hidden;
+  background: #08060c;
 }
 
 /* ===== BACKGROUND ===== */
 .battle-bg {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  min-height: -webkit-fill-available;
   z-index: 0;
+  overflow: hidden;
+  background: #08060c;
 }
 
 .battle-bg img {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
+  min-width: 100%;
+  min-height: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
   object-fit: cover;
+  object-position: center center;
   filter: brightness(0.68) contrast(1.12);
 }
 
@@ -3579,11 +3615,6 @@ const App = {
    * 3. Redirect Guard: Logged-in users navigating to login are redirected forward.
    */
   showPage(pageId) {
-    // If logged-in user visits login page, advance them forward
-    if (pageId === 'login-page' && this.state.isLoggedIn) {
-      const hasValidProfile = this.state.username && this.state.age && this.state.sex;
-      pageId = hasValidProfile ? 'char-select-page' : 'profile-page';
-    }
 
     // 1. Strict Auth Guard: User MUST be logged in
     if ((pageId === 'profile-page' || pageId === 'char-select-page' || pageId === 'battle-page') && !this.state.isLoggedIn) {
@@ -3790,21 +3821,10 @@ document.addEventListener('DOMContentLoaded', () => {
     monster.classList.add('revealed');
   }, 800);
 
-  // === CTA button — navigate intelligently based on auth status ===
+  // === CTA button — always show Login page first ===
   const btnEnter = document.getElementById('btn-enter-arena');
   btnEnter?.addEventListener('click', () => {
-    if (App.state.isLoggedIn) {
-      const hasValidName = App.state.username && App.state.username.trim().length > 0;
-      const hasValidAge = App.state.age && Number(App.state.age) >= 1;
-
-      if (hasValidName && hasValidAge) {
-        App.showPage('char-select-page');
-      } else {
-        App.showPage('profile-page');
-      }
-    } else {
-      App.showPage('login-page');
-    }
+    App.showPage('login-page');
   });
 });
 
@@ -3949,12 +3969,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       resetSubmitButton();
-
-      const hasValidName = App.state.username && App.state.username.trim().length > 0;
-      const hasValidAge = App.state.age && Number(App.state.age) >= 1;
-      const hasSelectedChar = App.state.selectedChar === 'male' || App.state.selectedChar === 'female';
-
-      App.showPage(hasValidName && hasValidAge ? 'char-select-page' : 'profile-page');
+      // Always proceed to Profile page to set/verify username, age, and sex
+      App.showPage('profile-page');
     } catch (err) {
       showError(err.message || 'Authentication failed. Please try again.');
       resetSubmitButton();
