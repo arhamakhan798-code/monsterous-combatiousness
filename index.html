@@ -16,6 +16,8 @@
   <link rel="preload" as="image" href="assets/char-select-male.png">
   <link rel="preload" as="image" href="assets/char-select-female.png">
   <link rel="preload" as="image" href="assets/monster.gif">
+  <link rel="preload" as="image" href="assets/bg-arena-portrait.jpg" media="(orientation: portrait)">
+  <link rel="preload" as="image" href="assets/bg-arena-landscape.jpg" media="(orientation: landscape)">
   <link rel="preload" as="audio" href="assets/bg-music.mp3">
   <!-- Favicon (skull emoji as data URI) -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💀</text></svg>">
@@ -1216,6 +1218,7 @@ input:focus-visible,
   background: #08060c;
 }
 
+.battle-bg picture,
 .battle-bg img {
   position: absolute;
   top: 0;
@@ -1228,7 +1231,7 @@ input:focus-visible,
   min-height: 100dvh;
   object-fit: cover;
   object-position: center center;
-  filter: brightness(0.68) contrast(1.12);
+  filter: brightness(0.72) contrast(1.1);
 }
 
 .battle-bg::after {
@@ -3493,9 +3496,13 @@ input:focus-visible,
   <!-- ===== PAGE 5: BATTLE ARENA ===== -->
   <div id="battle-page" class="page">
 
-    <!-- Background -->
+    <!-- Background (Responsive: portrait for mobile portrait mode, landscape for landscape mode) -->
     <div class="battle-bg">
-      <img src="assets/bg-arena.jpg" alt="Arena" draggable="false">
+      <picture>
+        <source media="(orientation: portrait)" srcset="assets/bg-arena-portrait.jpg">
+        <source media="(orientation: landscape)" srcset="assets/bg-arena-landscape.jpg">
+        <img src="assets/bg-arena-landscape.jpg" alt="Arena" draggable="false">
+      </picture>
     </div>
 
     <!-- HUD: Health Bars -->
@@ -3825,7 +3832,8 @@ const App = {
       'assets/male-char.png', 'assets/male-punch.png', 'assets/male-kick.png', 'assets/male-hurt.png', 'assets/male-victory.png',
       'assets/female-char.png', 'assets/female-punch.png', 'assets/female-kick.png', 'assets/female-victory.png',
       'assets/char-select-male.png', 'assets/char-select-female.png',
-      'assets/monster.gif', 'assets/monster-attack.gif', 'assets/bg-arena.jpg'
+      'assets/monster.gif', 'assets/monster-attack.gif', 'assets/bg-arena.jpg',
+      'assets/bg-arena-portrait.jpg', 'assets/bg-arena-landscape.jpg'
     ].forEach(src => {
       const img = new Image();
       img.src = src;
